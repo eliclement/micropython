@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 
-#include "py/mphal.h"
+#include "py/mpconfig.h"
 
 #if MICROPY_HW_ENABLE_USBDEV
 
