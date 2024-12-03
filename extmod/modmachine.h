@@ -29,6 +29,7 @@
 
 #include "py/mphal.h"
 #include "py/obj.h"
+#include "mp_usbd.h"
 
 #if MICROPY_PY_MACHINE_SPI || MICROPY_PY_MACHINE_SOFTSPI
 #include "drivers/bus/spi.h"
