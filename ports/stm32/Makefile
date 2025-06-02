@@ -238,26 +238,26 @@ DRIVERS_SRC_C += $(addprefix drivers/,\
 	memory/spiflash.c \
 	dht/dht.c \
 	)
-	
-TINYUSB_SRC_C += $(addprefix lib/tinyusb/src/,\
-	class/cdc/cdc_device.c \
-	class/msc/msc_device.c \
-	common/tusb_fifo.c \
-	device/usbd.c \
-	device/usbd_control.c \
-	portable/st/stm32_fsdev/dcd_stm32_fsdev.c \
-	portable/synopsys/dwc2/dcd_dwc2.c \
-	tusb.c \
+
+# TinyUSB Stack source
+-include $(TOP)/lib/tinyusb/src/tinyusb.mk
+TINYUSB_SRC_C := $(addprefix lib/tinyusb/, \
+	$(TINYUSB_SRC_C) \
+	src/portable/st/stm32_fsdev/dcd_stm32_fsdev.c \
+	src/portable/synopsys/dwc2/dcd_dwc2.c \
 	)
-LDFLAGS +=  -Wl,--wrap=dcd_event_handler
 
 SRC_C += \
 	boardctrl.c \
 	main.c \
 	stm32_it.c \
+	usbd.c \
 	usbd_conf.c \
 	usb.c \
-	usbd.c \
+	usbd_desc.c \
+	usbd_cdc_interface.c \
+	usbd_hid_interface.c \
+	usbd_msc_interface.c \
 	mphalport.c \
 	mpnetworkport.c \
 	mpthreadport.c \
@@ -307,6 +307,7 @@ SRC_C += \
 	storage.c \
 	sdcard.c \
 	sdram.c \
+	vfs_rom_ioctl.c \
 	fatfs_port.c \
 	lcd.c \
 	accel.c \
@@ -432,6 +433,15 @@ HAL_SRC_C += $(addprefix $(STM32LIB_HAL_BASE)/Src/stm32$(MCU_SERIES)xx_,\
 	)
 endif
 
+USBDEV_SRC_C += $(addprefix $(USBDEV_DIR)/,\
+	core/src/usbd_core.c \
+	core/src/usbd_ctlreq.c \
+	core/src/usbd_ioreq.c \
+	class/src/usbd_cdc_msc_hid.c \
+	class/src/usbd_msc_bot.c \
+	class/src/usbd_msc_scsi.c \
+	)
+
 ifeq ($(MICROPY_SSL_MBEDTLS),1)
 LIB_SRC_C += mbedtls/mbedtls_port.c
 endif
@@ -470,6 +480,7 @@ OBJ += $(addprefix $(BUILD)/, $(LIBM_SRC_C:.c=.o))
 OBJ += $(addprefix $(BUILD)/, $(SHARED_SRC_C:.c=.o))
 OBJ += $(addprefix $(BUILD)/, $(DRIVERS_SRC_C:.c=.o))
 OBJ += $(addprefix $(BUILD)/, $(HAL_SRC_C:.c=.o))
+OBJ += $(addprefix $(BUILD)/, $(USBDEV_SRC_C:.c=.o))
 OBJ += $(addprefix $(BUILD)/, $(TINYUSB_SRC_C:.c=.o))
 OBJ += $(addprefix $(BUILD)/, $(SRC_C:.c=.o))
 OBJ += $(addprefix $(BUILD)/, $(SRC_CXX:.cpp=.o))

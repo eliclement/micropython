@@ -83,7 +83,7 @@ void pyb_usbd_init_fs(void) {
     const uint32_t otg_alt = GPIO_AF10_OTG1_FS;
     #elif defined(STM32L0)
     const uint32_t otg_alt = GPIO_AF0_USB;
-    #elif defined(STM32L432xx)
+    #elif defined(STM32L432xx) || defined(STM32L452xx)
     const uint32_t otg_alt = GPIO_AF10_USB_FS;
     #elif defined(STM32H5) || defined(STM32WB)
     const uint32_t otg_alt = GPIO_AF10_USB;
@@ -146,7 +146,7 @@ void pyb_usbd_init_fs(void) {
     #elif defined(STM32L0)
     NVIC_SetPriority(USB_IRQn, IRQ_PRI_OTG_FS);
     HAL_NVIC_EnableIRQ(USB_IRQn);
-    #elif defined(STM32L432xx)
+    #elif defined(STM32L432xx) || defined(STM32L452xx)
     NVIC_SetPriority(USB_FS_IRQn, IRQ_PRI_OTG_FS);
     HAL_NVIC_EnableIRQ(USB_FS_IRQn);
     #elif defined(STM32G4) || defined(STM32L1) || defined(STM32WB)

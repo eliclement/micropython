@@ -41,7 +41,7 @@ static inline int mp_hal_status_to_neg_errno(HAL_StatusTypeDef status) {
 
 extern ringbuf_t stdin_ringbuf;
 
-NORETURN void mp_hal_raise(HAL_StatusTypeDef status);
+MP_NORETURN void mp_hal_raise(HAL_StatusTypeDef status);
 void mp_hal_set_interrupt_char(int c); // -1 to disable
 
 // Atomic section helpers.
@@ -148,3 +148,7 @@ enum {
 void mp_hal_generate_laa_mac(int idx, uint8_t buf[6]);
 void mp_hal_get_mac(int idx, uint8_t buf[6]);
 void mp_hal_get_mac_ascii(int idx, size_t chr_off, size_t chr_len, char *dest);
+
+static inline void mp_hal_wake_main_task_from_isr(void) {
+    // Defined for tinyusb support, nothing needs to be done here.
+}

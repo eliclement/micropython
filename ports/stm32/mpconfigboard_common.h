@@ -67,6 +67,26 @@
 #define MICROPY_HW_ENTER_BOOTLOADER_VIA_RESET (1)
 #endif
 
+// Whether to enable ROMFS on the internal flash.
+#ifndef MICROPY_HW_ROMFS_ENABLE_INTERNAL_FLASH
+#define MICROPY_HW_ROMFS_ENABLE_INTERNAL_FLASH (0)
+#endif
+
+// Whether to enable ROMFS on external QSPI flash.
+#ifndef MICROPY_HW_ROMFS_ENABLE_EXTERNAL_QSPI
+#define MICROPY_HW_ROMFS_ENABLE_EXTERNAL_QSPI (0)
+#endif
+
+// Whether to enable ROMFS partition 0.
+#ifndef MICROPY_HW_ROMFS_ENABLE_PART0
+#define MICROPY_HW_ROMFS_ENABLE_PART0 (0)
+#endif
+
+// Whether to enable ROMFS partition 1.
+#ifndef MICROPY_HW_ROMFS_ENABLE_PART1
+#define MICROPY_HW_ROMFS_ENABLE_PART1 (0)
+#endif
+
 // Whether to enable storage on the internal flash of the MCU
 #ifndef MICROPY_HW_ENABLE_INTERNAL_FLASH_STORAGE
 #define MICROPY_HW_ENABLE_INTERNAL_FLASH_STORAGE (1)
@@ -106,9 +126,22 @@
 #ifndef MICROPY_HW_ENABLE_USB
 #define MICROPY_HW_ENABLE_USB (0)
 #endif
-#define MICROPY_HW_ENABLE_USBDEV 1
-#define MICROPY_HW_USB_CDC 1
+
+#if MICROPY_HW_ENABLE_USB
+#define MICROPY_HW_ENABLE_USBDEV (1)
+#define MICROPY_HW_USB_CDC (1)
 #define MICROPY_HW_USB_FS (1)
+
+// Select whether TinyUSB or legacy STM stack is used to provide USB.
+#ifndef MICROPY_HW_TINYUSB_STACK
+#define MICROPY_HW_TINYUSB_STACK (MICROPY_PREVIEW_VERSION_2)
+#endif
+
+// Support machine.USBDevice (only available with TinyUSB)
+#ifndef MICROPY_HW_ENABLE_USB_RUNTIME_DEVICE
+#define MICROPY_HW_ENABLE_USB_RUNTIME_DEVICE    (MICROPY_HW_TINYUSB_STACK)
+#endif
+#endif // MICROPY_HW_ENABLE_USB
 
 // Whether to enable the PA0-PA3 servo driver, exposed as pyb.Servo
 #ifndef MICROPY_HW_ENABLE_SERVO
@@ -188,6 +221,12 @@
 // Function to determine if the given spi_id is reserved for system use or not.
 #ifndef MICROPY_HW_SPI_IS_RESERVED
 #define MICROPY_HW_SPI_IS_RESERVED(spi_id) (false)
+#endif
+
+// Function to determine if the given spi_id is static or not.
+// Static SPI instances can be accessed by the user but are not deinit'd on soft reset.
+#ifndef MICROPY_HW_SPI_IS_STATIC
+#define MICROPY_HW_SPI_IS_STATIC(spi_id) (false)
 #endif
 
 // Function to determine if the given tim_id is reserved for system use or not.
@@ -667,10 +706,10 @@
 #define MICROPY_HW_USB_CDC_NUM (1)
 #endif
 #ifndef MICROPY_HW_USB_MSC
-#define MICROPY_HW_USB_MSC (0)
+#define MICROPY_HW_USB_MSC (MICROPY_HW_ENABLE_USB && !MICROPY_HW_TINYUSB_STACK)
 #endif
 #ifndef MICROPY_HW_USB_HID
-#define MICROPY_HW_USB_HID (0)
+#define MICROPY_HW_USB_HID (MICROPY_HW_ENABLE_USB && !MICROPY_HW_TINYUSB_STACK)
 #endif
 
 // Pin definition header file
@@ -690,3 +729,7 @@
 #endif
 
 #define MICROPY_HW_USES_BOOTLOADER (MICROPY_HW_VTOR != 0x08000000)
+
+#ifndef MICROPY_HW_ETH_DMA_ATTRIBUTE
+#define MICROPY_HW_ETH_DMA_ATTRIBUTE __attribute__((aligned(16384)));
+#endif

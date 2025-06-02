@@ -3,7 +3,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2023 Angus Gratton
+ * Copyright (c) 2025 Andrew Leech
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@
 #include "mp_usbd.h"
 #include "py/mpconfig.h"
 #include "string.h"
-#include "tusb.h"
+#include "mphalport.h"
 
 void mp_usbd_port_get_serial_number(char *serial_buf) {
     uint8_t *id = (uint8_t *)MP_HAL_UNIQUE_ID_ADDRESS;
@@ -39,9 +39,4 @@ void mp_usbd_port_get_serial_number(char *serial_buf) {
     mp_usbd_hex_str(serial_buf, id, sizeof(MP_HAL_UNIQUE_ID_ADDRESS));
 }
 
-/*
-void USB_Handler_wrapper(void) {
-    tud_int_handler(0);
-}
-*/
 #endif

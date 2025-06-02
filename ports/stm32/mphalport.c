@@ -15,8 +15,6 @@
 #define MICROPY_HW_STDIN_BUFFER_LEN 128
 #endif
 
-// extern volatile uint32_t ticks_us64_upper;
-
 static uint8_t stdin_ringbuf_array[MICROPY_HW_STDIN_BUFFER_LEN];
 ringbuf_t stdin_ringbuf = { stdin_ringbuf_array, sizeof(stdin_ringbuf_array), 0, 0 };
 #endif
@@ -33,7 +31,7 @@ const byte mp_hal_status_to_errno_table[4] = {
 uint8_t mp_hal_unique_id_address[12];
 #endif
 
-NORETURN void mp_hal_raise(HAL_StatusTypeDef status) {
+MP_NORETURN void mp_hal_raise(HAL_StatusTypeDef status) {
     mp_raise_OSError(mp_hal_status_to_errno_table[status]);
 }
 
